@@ -1,25 +1,33 @@
 import React, { useState } from 'react';
 import { Main, Split } from '@aragon/ui';
 
-// import AppHeader from './component/AppHeader';
 import NavBar from './component/NavBar';
 import DistributionBox from './component/Distribution'
 import ENSBox from './component/ENSBox'
 import History from './component/HistoryBox'
+import NoAgent from './component/NoAgentBox'
+// import Web3 from 'web3';
 
+// const web3 = new Web3()
 
 function App() {
-  const [user, setUser] = useState('unkown');
+  const [web3, setWeb3] = useState(null)
+  const [user, setUser] = useState('');
+  // const [agentAddress, setAgentAddress] = useState('')
+  
+  const [factory, setFactory] = useState(null)
+  const [agent, setAgent] = useState(null)
+  
+  
 
   return (
     <>
       <Main>
-        { NavBar(user, setUser) }
-        <Split
+        { NavBar(user, setUser, factory, setFactory, setAgent, setWeb3) }
+        { user === '' ? <> </> : <Split
           primary={
-            <>
-              {History()}
-            </>
+            agent === null ? 
+            NoAgent(user, factory, setAgent, web3) : History()
           }
           secondary={
             <>
@@ -27,9 +35,8 @@ function App() {
             {ENSBox()}
             </>
           }
-        />
-        {/* <AppHeader></AppHeader> */}
-        {/* <div>Your app goes here</div> */}
+        /> }
+        
       </Main>
     </>
   );

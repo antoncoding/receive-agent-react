@@ -1,23 +1,20 @@
-/*
- * Source: https://github.com/aragon/aragon-apps/blob/master/apps/token-manager/app/src/components/AppHeader.js
- */
-
 import React from 'react';
-import Web3 from 'web3'
-import { IdentityBadge, Bar } from '@aragon/ui';
+import Web3 from 'web3';
+import { IdentityBadge, Bar, ButtonBase, Box } from '@aragon/ui';
 
-export default function NavBar(user, setUser) {
-  let web3;
+const { FACTORY: factoryAddress } = require('../config/contracts');
+const factoryAbi = require('../config/abi/AgentFactory.json');
+const agentAbi = require('../config/abi/ReceiveAgent.json');
+
+export default function NavBar(user, setUser, factory, setFactory, setAgent, setWeb3) {
+
+  // const [visible, setVisible] = useState(true)
+
+  let web3 = new Web3();
 
   if (window.ethereum) {
     web3 = new Web3(window.ethereum);
-    try {
-      window.ethereum.enable().then(accounts => {
-        setUser(accounts[0])
-      });
-    } catch (e) {
-      // User has denied account access to DApp...
-    }
+    window.ethereum.autoRefreshOnNetworkChange = false;
   }
   // Legacy DApp Browsers
   else if (window.web3) {
@@ -28,16 +25,49 @@ export default function NavBar(user, setUser) {
     console.error('You have to install MetaMask !');
   }
 
+  const handleClick = async () => {
+    try {
+      const accounts = await window.ethereum.enable();
+      setWeb3(web3)
+      setUser(accounts[0]);
+
+      let _factory = new web3.eth.Contract(factoryAbi, factoryAddress);
+      setFactory(_factory);
+
+      // Find Agent Address if already created
+      const events = await _factory.getPastEvents('AgentCreated', {
+        filter: { owner: user },
+        fromBlock: 5810000,
+      })
+      if(events.length > 0) {
+        const agentAddress = events[0].returnValues.newAgentAddress;
+        const _agent = new web3.eth.Contract(agentAbi, agentAddress);
+        // setAgent(_agent)
+      }
+
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
+    <>
     <Bar
       secondary={
-        <IdentityBadge
-          // customLabel="Custom Label User"
-          entity={user}
-          connectedAccount={false}
-          networkType='rinkeby'
-        />
+        user === '' ? (
+          <ButtonBase onClick={handleClick}>
+            <Box padding={10}>Connect to MetaMask</Box>
+          </ButtonBase>
+        ) : (
+          <IdentityBadge
+            // customLabel="Custom Label User"
+            entity={user}
+            connectedAccount={false}
+            networkType='rinkeby'
+          />
+        )
       }
     />
+    </>
   );
 }

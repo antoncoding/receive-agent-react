@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Main, Split } from '@aragon/ui';
+
+// import AppHeader from './component/AppHeader';
+import NavBar from './component/NavBar';
+import DistributionBox from './component/Distribution'
+import ENSBox from './component/ENSBox'
+import History from './component/HistoryBox'
+
 
 function App() {
+  const [user, setUser] = useState('unkown');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Main>
+        { NavBar(user, setUser) }
+        <Split
+          primary={
+            <>
+              {History()}
+            </>
+          }
+          secondary={
+            <>
+            {DistributionBox()}
+            {ENSBox()}
+            </>
+          }
+        />
+        {/* <AppHeader></AppHeader> */}
+        {/* <div>Your app goes here</div> */}
+      </Main>
+    </>
   );
 }
 

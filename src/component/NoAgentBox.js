@@ -10,11 +10,9 @@ export default function NoAgentBox(user, factory, setAgent, web3) {
     
     factory.once('AgentCreated', {
         fromBlock: 'latest'
-    }, function(error, event){
+    }, function(_, event){
       if(event) {
-        console.log(event)
         const agentAddress = event.returnValues.newAgentAddress;
-        
         const _agent = new web3.eth.Contract(agentAbi, agentAddress);
         setAgent(_agent)
       }

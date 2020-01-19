@@ -5,7 +5,7 @@
 import React  from 'react';
 import { Box } from '@aragon/ui';
 
-export default function DistributionBox(user, setUser) {
+export default function ENSBox(user, setUser) {
 
   return (
     <Box>

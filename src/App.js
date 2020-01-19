@@ -18,7 +18,9 @@ function App() {
   const [factory, setFactory] = useState(null)
   const [agent, setAgent] = useState(null)
   
-  
+  const [ distribution, setDistribution ] = useState([
+    { item: 'ETH', percentage: 100 }
+  ])
 
   return (
     <>
@@ -31,7 +33,7 @@ function App() {
           }
           secondary={
             <>
-            {DistributionBox()}
+            {DistributionBox(agent, distribution, setDistribution)}
             {ENSBox()}
             </>
           }

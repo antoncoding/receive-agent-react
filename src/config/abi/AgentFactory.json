@@ -28,12 +28,12 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "name": "newAgentAddress",
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "name": "owner",
         "type": "address"
       }

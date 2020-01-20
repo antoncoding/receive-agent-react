@@ -6,9 +6,7 @@ import DistributionBox from './component/Distribution'
 import ENSBox from './component/ENSBox'
 import History from './component/HistoryBox'
 import NoAgent from './component/NoAgentBox'
-// import Web3 from 'web3';
-
-// const web3 = new Web3()
+import AddRuleModal from './component/modals/AddRuleModal'
 
 function App() {
   const [web3, setWeb3] = useState(null)
@@ -17,6 +15,9 @@ function App() {
   
   const [factory, setFactory] = useState(null)
   const [agent, setAgent] = useState(null)
+
+  // modals
+  const [strategyVisible, openStrategyModal] = useState(false)
   
   const [ distribution, setDistribution ] = useState([
     { item: 'ETH', percentage: 100 }
@@ -25,6 +26,7 @@ function App() {
   return (
     <>
       <Main>
+        { AddRuleModal(strategyVisible, openStrategyModal, agent, user) }
         { NavBar(user, setUser, factory, setFactory, setAgent, setWeb3) }
         { user === '' ? <> </> : <Split
           primary={
@@ -33,7 +35,7 @@ function App() {
           }
           secondary={
             <>
-            {DistributionBox(agent, distribution, setDistribution)}
+            {DistributionBox(agent, distribution, setDistribution, openStrategyModal)}
             {ENSBox()}
             </>
           }

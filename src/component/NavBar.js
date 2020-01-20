@@ -36,12 +36,9 @@ export default function NavBar(user, setUser, factory, setFactory, setAgent, set
 
       // Find Agent Address if already created
       const events = (await _factory.getPastEvents('AgentCreated', {
-        // filter: { owner: accounts[0] },
+        filter: { owner: accounts[0] },
         fromBlock: 5819000,
-      })) // need filter cause the web3 filter is not effective no this syntax ?
-      .filter(event => {
-        return event.returnValues.owner.toLowerCase() === accounts[0].toLowerCase()
-      })
+      }))
       console.log(events)
       
       if(events.length > 0) {

@@ -5,7 +5,7 @@
 import React from 'react';
 import { Box, Distribution, Button, IconEdit } from '@aragon/ui';
 
-export default function DistributionBox(agent, distribution, setDistribution) {
+export default function DistributionBox(agent, distribution, setDistribution, openModal) {
 
   // agent.methods.sumPercentage().call().then(tokenPer => {
   //   console.log(`got ${tokenPer}`)
@@ -26,6 +26,7 @@ export default function DistributionBox(agent, distribution, setDistribution) {
       <Button 
         icon={<IconEdit/>} 
         label="Edit Strategy"
+        onClick={()=>openModal(true)}
       /> 
       </div>
 

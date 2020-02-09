@@ -3,12 +3,15 @@ import { Modal, Button, Field, TextInput, IdentityBadge, Split } from '@aragon/u
 
 import { UNISWAP_PROXY as uniswapProxy } from '../../config/contracts';
 
-export default function AddRuleModal(visible, setVisible, agent, user) {
+export default function AddRuleModal(visible, setVisible, agent, user, notify) {
   const [ercAddress, setERCAddr] = useState('0x98d9a611ad1b5761bdc1daac42c48e4d54cf5882');
   const [percentage, setPercentage] = useState(20);
 
   const handleAddRule = async () => {
-    agent.methods.addRule(ercAddress, user, uniswapProxy, percentage).send({ from: user });
+    agent.methods.addRule(ercAddress, user, uniswapProxy, percentage).send({ from: user })
+    .on('transactionHash', (hash)=>{
+      notify.hash(hash)
+    });
   };
 
   return (

@@ -9,7 +9,7 @@ export default function DistributionBox(user, setUser) {
 
   return (
     <Box>
-      History
+      Your Agent
     </Box>
     
   );

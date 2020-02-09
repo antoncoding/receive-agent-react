@@ -1,36 +1,65 @@
-/*
- * Source: https://github.com/aragon/aragon-apps/blob/master/apps/token-manager/app/src/components/AppHeader.js
- */
-
-import React from 'react';
+import React, { Component } from 'react';
 import { Box, Distribution, Button, IconEdit } from '@aragon/ui';
+import { render } from 'react-dom';
 
-export default function DistributionBox(agent, distribution, setDistribution, openModal) {
+const tokenAbi = require('../config/abi/ERC20.json');
 
-  // agent.methods.sumPercentage().call().then(tokenPer => {
-  //   console.log(`got ${tokenPer}`)
-  //   setDistribution([
-  //     { item: 'ETH', percentage: 100-tokenPer },
-  //     { item: 'Other', percentage: tokenPer }
-  //   ])
-  // })
+export default class DistributionBox extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      strategies: [{ item: 'ETH', percentage: 100, id: '', beneficiary: '', exchange: '' }],
+    };
+  }
 
-  return (
-    <Box>
-      <Distribution
-        heading="Current Strategy"
-        items = { distribution }
-      />
-      <br/>
-      <div style={{ alignSelf: 'center'}}>
-      <Button 
-        icon={<IconEdit/>} 
-        label="Edit Strategy"
-        onClick={()=>openModal(true)}
-      /> 
-      </div>
+  async syncStrategies() {
+    let agent = this.props.agent;
+    const numKeys = await agent.methods.countKeys().call();
+    let tmpStrategies = [];
+    let defaultStrategy = this.state.strategies[0];
 
-    </Box>
-    
-  );
+    for (let i = 0; i < numKeys; i++) {
+      tmpStrategies[i] = { item: '', percentage: 0, id: '', beneficiary: '', exchange: '' };
+      const id = await agent.methods.ruleKeys(i).call();
+      const [tokenAddr, percentage, recipient, exchange] = await Promise.all([
+        agent.methods.assets(id).call(),
+        agent.methods.percentages(id).call(),
+        agent.methods.recipients(id).call(),
+        agent.methods.exchanges(id).call(),
+      ]);
+      console.log([tokenAddr, percentage, recipient, exchange]);
+
+      let token = new this.props.web3.eth.Contract(tokenAbi, tokenAddr);
+      let tokenName = await token.methods.name().call();
+      
+      tmpStrategies[i].item = tokenName;
+      defaultStrategy.percentage -= parseInt(percentage);
+      tmpStrategies[i].percentage = parseInt(percentage);
+      tmpStrategies[i].beneficiary = recipient;
+      tmpStrategies[i].exchange = exchange;
+      
+    }
+    tmpStrategies.push(defaultStrategy)
+      this.setState({ strategies: tmpStrategies });
+  }
+
+  async componentDidMount() {
+    await this.syncStrategies();
+  }
+  
+  render() {
+    return (
+      <Box>
+        <Distribution heading='Current Strategy' items={this.state.strategies} />
+        <br />
+        <div style={{ alignSelf: 'center' }}>
+          <Button
+            icon={<IconEdit />}
+            label='Edit Strategy'
+            // onClick={()=>openModal(true)}
+          />
+        </div>
+      </Box>
+    );
+  }
 }

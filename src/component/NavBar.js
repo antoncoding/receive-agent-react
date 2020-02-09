@@ -43,6 +43,7 @@ export default function NavBar(user, setUser, factory, setFactory, setAgent, set
       
       if(events.length > 0) {
         const agentAddress = events[0].returnValues.newAgentAddress;
+        console.log(`agent addr ${agentAddress}`)
         const _agent = new web3.eth.Contract(agentAbi, agentAddress);
         setAgent(_agent)
       } 

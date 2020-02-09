@@ -24,10 +24,6 @@ function App() {
 
   // modals
   const [strategyVisible, openStrategyModal] = useState(false)
-  
-  const [ distribution, setDistribution ] = useState([
-    { item: 'ETH', percentage: 100 }
-  ])
 
   return (
     <>
@@ -36,12 +32,17 @@ function App() {
         { NavBar(user, setUser, factory, setFactory, setAgent, setWeb3) }
         { user === '' ? <> </> : <Split
           primary={
-            agent === null ? 
-            NoAgent(user, factory, setAgent, web3, notify) : History()
+            agent === null 
+              ? NoAgent(user, factory, setAgent, web3, notify) 
+              : <DistributionBox
+              agent = {agent}
+              openStrategyModal ={openStrategyModal}
+              web3={web3}
+              />
+              //(agent, openStrategyModal, strategies, updateStrategies,  web3)
           }
           secondary={
             <>
-            {DistributionBox(agent, distribution, setDistribution, openStrategyModal)}
             {ENSBox()}
             </>
           }

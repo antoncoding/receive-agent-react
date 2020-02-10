@@ -27,7 +27,6 @@ export default class DistributionBox extends Component {
         agent.methods.recipients(id).call(),
         agent.methods.exchanges(id).call(),
       ]);
-      console.log([tokenAddr, percentage, recipient, exchange]);
 
       let token = new this.props.web3.eth.Contract(tokenAbi, tokenAddr);
       let tokenName = await token.methods.name().call();
@@ -46,7 +45,7 @@ export default class DistributionBox extends Component {
   async componentDidMount() {
     await this.syncStrategies();
   }
-  
+
   render() {
     return (
       <Box>

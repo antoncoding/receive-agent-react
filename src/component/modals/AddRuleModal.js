@@ -4,7 +4,7 @@ import { Modal, Button, Field, TextInput, IdentityBadge, Split } from '@aragon/u
 import { UNISWAP_PROXY as uniswapProxy } from '../../config/contracts';
 
 export default function AddRuleModal(visible, setVisible, agent, user, notify) {
-  const [ercAddress, setERCAddr] = useState('0x98d9a611ad1b5761bdc1daac42c48e4d54cf5882');
+  const [ercAddress, setERCAddr] = useState('0xc4375b7de8af5a38a93548eb8453a498222c4ff2');
   const [percentage, setPercentage] = useState(20);
 
   const handleAddRule = async () => {
@@ -29,10 +29,10 @@ export default function AddRuleModal(visible, setVisible, agent, user, notify) {
               />
             </Field>
             <Field label='Exchange Proxy'>
-              <IdentityBadge entity={uniswapProxy} shorten={false} networkType='rinkeby' />
+              <IdentityBadge entity={uniswapProxy} shorten={false} networkType='kovan' />
             </Field>
             <Field label='Beneficiary'>
-              <IdentityBadge entity={user} shorten={false} networkType='rinkeby' />
+              <IdentityBadge entity={user} shorten={false} networkType='kovan' />
             </Field>
           </>
         }

@@ -66,7 +66,7 @@ export default function NavBar(user, setUser, factory, setFactory, setAgent, set
             // customLabel="Custom Label User"
             entity={user}
             connectedAccount={false}
-            networkType='rinkeby'
+            networkType='kovan'
           />
         )
       }

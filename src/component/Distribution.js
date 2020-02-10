@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Box, Distribution, Button, IconEdit } from '@aragon/ui';
-import { render } from 'react-dom';
 
 const tokenAbi = require('../config/abi/ERC20.json');
 
@@ -28,15 +27,20 @@ export default class DistributionBox extends Component {
         agent.methods.exchanges(id).call(),
       ]);
 
-      let token = new this.props.web3.eth.Contract(tokenAbi, tokenAddr);
-      let tokenName = await token.methods.name().call();
+      let tokenName 
+      try {
+        let token = new this.props.web3.eth.Contract(tokenAbi, tokenAddr);
+        tokenName = await token.methods.name().call();
+      } catch (error) {
+        tokenName = tokenAddr.slice(0, 8) + '...'
+      }
       
       tmpStrategies[i].item = tokenName;
       defaultStrategy.percentage -= parseInt(percentage);
       tmpStrategies[i].percentage = parseInt(percentage);
       tmpStrategies[i].beneficiary = recipient;
       tmpStrategies[i].exchange = exchange;
-      
+
     }
     tmpStrategies.push(defaultStrategy)
       this.setState({ strategies: tmpStrategies });
@@ -55,7 +59,7 @@ export default class DistributionBox extends Component {
           <Button
             icon={<IconEdit />}
             label='Edit Strategy'
-            // onClick={()=>openModal(true)}
+            onClick={()=>this.props.openStrategyModal(true)}
           />
         </div>
       </Box>
